@@ -72,6 +72,93 @@ This makes Copilot Studio the most natural and secure choice for building a prod
 
 > ⚠️ The agent does not generate or infer transcripts.  
 > It operates **only on transcripts produced by Teams Premium** and stored in SharePoint, ensuring consistency and traceability across the system.
+### Current Transcript Conversion Workflow (VTT → Excel)
+
+At this stage, **there is no automated workflow** in place that converts VTT transcript files directly into Excel format.
+
+Instead, the conversion process is performed **manually** using the open‑source tool **Subtitle Edit**.
+
+#### Tool Used
+- **Subtitle Edit** – desktop software for subtitle conversion  
+  Download: https://www.nikse.dk/subtitleedit
+
+---
+
+#### Current Manual Process
+
+1. Download the **VTT transcript file** produced by Microsoft Teams Premium.
+2. Open the VTT file in **Subtitle Edit**.
+3. Use Subtitle Edit to **export the transcript to CSV format**.
+4. Open **Microsoft Excel**.
+5. Import the CSV file into Excel.
+6. Convert the imported data into an **Excel Table**.
+7. Ensure the required columns exist:
+   - `StartTimeMs`
+   - `EndTimeMs`
+   - `Text`
+8. Save the Excel file using the **exact CamelCase name** of the corresponding video file.
+9. Upload the Excel transcript to the **SharePoint Transcripts library**.
+
+---
+
+#### Important Notes
+
+- This manual process is currently required to ensure:
+  - Correct timestamp alignment
+  - Clean and predictable data structure
+  - Compatibility with deterministic Power Automate flows
+- Automation of this pipeline (VTT → Excel) **may be added in the future**, but is **out of scope for the current implementation**.
+
+✅ Until automation is introduced, **Subtitle Edit is the recommended and supported tool** for transcript conversion in this solution.
+
+### Important Warnings and Current Limitations
+
+#### ⚠️ Transcript Generation from Microsoft Teams
+
+At present, **transcript file generation from Microsoft Teams recordings is also a manual process**.
+
+- Transcript files (VTT) **are not automatically retrievable** via standard APIs.
+- There is **no supported out‑of‑the‑box workflow** that programmatically fetches transcripts for all meetings in a tenant.
+
+Automatic retrieval is possible **only** if all of the following conditions are met:
+
+- You have **tenant‑level administrator privileges**
+- You have explicitly granted:
+  - **Microsoft Graph – Read all meetings and transcripts**
+  - Organization‑wide **Application permissions** on Graph
+- You are authorized to access transcripts for **all users and all meetings** in the tenant
+
+> ⚠️ These permissions are **highly sensitive**, require security approval, and are **not commonly granted** in production enterprise environments.
+
+---
+
+#### Practical Implication for This Solution
+
+Because of these restrictions:
+
+- ✅ **Transcript download from Teams is currently manual**
+- ✅ Users must explicitly download the `.vtt` file from the Teams / Stream interface
+- ✅ The downloaded VTT file then enters the **manual conversion pipeline**:
+  **VTT → CSV → Excel → SharePoint**
+
+This design choice is intentional and ensures:
+- Compliance with tenant security policies
+- Clear data ownership and traceability
+- No reliance on elevated Graph permissions
+
+---
+
+#### Future Consideration (Out of Scope)
+
+If, in the future, the organization approves:
+- Tenant‑wide Microsoft Graph access
+- Automated access to meeting artifacts
+
+Then a fully automated pipeline **may be designed**.  
+Until then, **manual transcript retrieval and conversion is the supported and recommended approach** for this solution.
+
+✅ The Copilot Studio agent **never attempts to fetch transcripts directly from Teams**  
+✅ It operates only on **explicitly uploaded and validated transcript files**
 
 ### Downloadable Example Files (VTT → CSV → Excel)
 
