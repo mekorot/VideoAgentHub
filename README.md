@@ -391,7 +391,7 @@ Final answer must contain exactly three parts:
 If no transcript answers the question:
 - Respond clearly in Hebrew- Do not generate a Stream 365 link
 Example:> לא נמצא קטע תמלול שעונה ישירות על השאלה שנשאלה.
-
+```
 ## 7. Create Deterministic Flows for the Agent
 
 Create the Power Automate flows that implement **all deterministic execution** used by the agent (file resolution, citation formatting, Stream URL generation).
