@@ -150,10 +150,31 @@ No other formats are supported in production.
 
 ### 4. Enrich Transcript Metadata (Optional but Recommended)
 
-1. Use a language model to generate a **Hebrew title** based on the transcript.
+Enriching transcript metadata improves discoverability, ranking quality, and future agent capabilities.
+
+1. Use a language model to generate a **Hebrew title** based on the transcript content.
 2. Store the Hebrew title:
-   - As SharePoint metadata, or
-   - In an associated SharePoint list
+   - As **SharePoint metadata** on the transcript file, or  
+   - In an **associated SharePoint list** linked to the video/transcript.
+3. *(Optional – Future Enhancement)* Add a **Brief / Summary field**:
+   - Generate a short, neutral summary (1–2 sentences) describing the video content.
+   - Store this value as a dedicated **`Brief` metadata field** in SharePoint.
+   - **Index this field** once added (coordinate with the SharePoint team).
+
+#### Why add and index a Brief field?
+
+- Enables faster semantic narrowing before transcript‑level search
+- Improves relevance scoring and ranking
+- Allows future hybrid retrieval strategies (metadata + transcript)
+- Reduces unnecessary transcript scanning for high‑level queries
+
+> ℹ️ **Action item:**  
+> Coordinate with the SharePoint team to:
+> - Add a `Brief` site column
+> - Attach it to the relevant libraries
+> - Mark it as **indexed** to support scale and performance
+
+This extension is not mandatory for the initial implementation but is **strongly recommended** for improving the agent’s effectiveness as the content library grows.
 
 ---
 
