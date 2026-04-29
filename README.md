@@ -35,12 +35,21 @@ All components **must be created inside a single Power Platform Solution**.
 
 ---
 
-### 2. Prepare and Upload Video Files
+### 2. Prepare and Upload Video Files (with Examples)
 
-1. Download source video files locally.
-2. Rename each file to **English CamelCase**.
-3. Upload the files to the **Videos** library.
-4. (Optional) Store additional metadata such as recording date or owner.
+This step ensures that video files are named, stored, and referenced consistently so they can be deterministically resolved by the agent and flows.
+
+#### Required Conventions
+- File names **must be in English**
+- Use **CamelCase**
+- Avoid spaces, special characters, or dates in free text
+- The video file name must later **match the transcript file name exactly**
+
+---
+
+#### Example 1 – Meeting Recording
+
+**Original file name (downloaded):**
 
 ---
 
