@@ -429,6 +429,7 @@ Create the Power Automate flows that implement **all deterministic execution** u
 }
 ```
 - The Json format should be stringify and encoded into bas64.
+- The url components are: `domain` + `fileName.mp4` + `?nav=` + `encodedJsonBase64` + `&web=1`
   
 ### 7.2 Flow Implementation Guidelines (Deterministic / Production‑Safe)
 
