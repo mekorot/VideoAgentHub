@@ -221,17 +221,52 @@ No other formats are supported in production.
 
 ### 3. Generate and Structure Transcripts
 
-1. Download the transcript file (usually `.vtt`).
+Transcript files used by this solution are **retrieved from the Microsoft Stream (365) app**, which is the system of record for Teams meeting recordings.
+
+> ⚠️ **Access and availability are policy‑dependent**  
+> By default, transcript files are available **only to the meeting organizer**, unless the Teams meeting or tenant policy explicitly grants broader access.
+
+---
+
+#### Transcript Availability and Content
+
+- The transcript can be downloaded from the **Stream (365) app** associated with the meeting.
+- A transcript that includes **participant identities (speaker attribution)** is available **only when transcription was enabled and executed online during the meeting itself**.
+- If transcription was not enabled live:
+  - The transcript may be missing speaker names
+  - Or may not be available at all
+
+✅ This solution assumes transcripts are **explicitly downloaded by an authorized user** and then processed.
+
+---
+
+#### Transcript Processing Steps
+
+1. Download the transcript file from **Stream (365)**  
+   - File format is usually `.vtt`
 2. Convert the transcript:
    - `VTT → CSV → Excel`
 3. In Excel:
-   - Convert the data into a **Table**
-   - Required columns:
+   - Convert the imported data into an **Excel Table**
+   - Ensure the following required columns exist:
      - `StartTimeMs`
      - `EndTimeMs`
      - `Text`
-4. Save the Excel file using the **exact same CamelCase name** as the video.
-5. Upload the Excel file to the **Transcripts** library.
+4. Save the Excel file using the **exact same CamelCase name** as the corresponding video file.
+5. Upload the Excel transcript file to the **SharePoint Transcripts library**.
+
+---
+
+#### Important Notes
+
+- ✅ Transcript retrieval from Stream (365) is **manual**
+- ✅ Transcript availability depends on:
+  - Meeting role (Organizer)
+  - Teams meeting policy
+  - Whether transcription ran **during** the meeting
+- ❌ The agent does not and cannot retrieve transcripts directly from Teams or Stream
+
+This guarantees that all transcript data consumed by the Copilot Studio agent is **explicitly reviewed,
 
 ---
 
