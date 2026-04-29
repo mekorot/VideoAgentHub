@@ -300,9 +300,47 @@ This extension is not mandatory for the initial implementation but is **strongly
 
 ---
 
-### 5. Create Power Platform Solution
 
-1. In the Power Platform development environment, create a solution:
+## 5. Create Power Platform Solution
+
+- In the **Power Platform development environment**, create a single solution named:
+- All components **must be created and managed inside this single solution**:
+  - Copilot Studio agent  
+  - Power Automate flows  
+  - Connections  
+  - Custom logic and configuration  
+
+### Reference Solution
+Use this repository as the authoritative reference for solution structure, conventions, and sample assets:  
+**Solution URL:** https://github.com/mekorot/VideoAgentHub
+
+### ⚠️ Governance & DevOps Alignment (Mandatory)
+
+Before performing **any** of the following actions:
+- Publishing the solution  
+- Exporting/importing between environments  
+- Enabling the agent for users  
+- Modifying connection references or environment variables  
+- Applying ALM, CI/CD, or release pipelines  
+
+✅ **You must first coordinate with the DevOps / Platform team.**
+
+This discussion must cover:
+- Environment strategy (Dev / Test / Prod)  
+- Solution versioning and ownership  
+- Deployment and approval flow  
+- Security, permissions, and connection governance  
+- Copilot Studio publishing policies  
+
+🚫 **Do not publish or promote the solution independently** without DevOps approval.  
+This ensures enterprise compliance, auditability, and long‑term supportability.
+
+## 6. Create Copilot Studio Agent
+
+- In **Copilot Studio**, create a new agent inside the existing **VideoRetrievalSolution**.
+- Agent type: **Custom Copilot**
+- Purpose: assist users in retrieving, navigating, and understanding recorded and transcribed video content (Teams / Stream 365).
+
 
 ```markdown
 # 🎥 Video Retrieval Agent (Copilot Studio)
@@ -312,6 +350,34 @@ A deterministic Copilot Studio agent for locating **Microsoft Stream (365) video
 This repository documents the **architecture, conventions, and setup steps** required to build an enterprise‑grade video discovery agent with auditable and reproducible behavior.
 
 ---
+### Copilot Agent Description (Copy)
+
+This AI assistant specializes in answering user questions by searching and analyzing meeting video transcripts stored in SharePoint.  
+When a user submits a question, the agent uses the SharePoint connector to locate relevant video transcripts, identifies the most relevant segment that answers the query, and returns a **structured response with three mandatory parts**:
+
+1. **A concise answer in Hebrew**  
+2. **A supporting citation** taken verbatim from the transcript, including **speaker attribution**  
+3. **A Stream 365 video link** that jumps directly to the **exact timestamp** where the answer appears
+
+#### Language & Reasoning Rules
+- ✅ All user‑facing output **must be in Hebrew**
+- ✅ Internal reasoning and processing are performed in **English**
+- ❌ The agent never mixes languages in surfaced responses
+
+#### Video Link Construction
+The Stream 365 link is generated using a **strict, deterministic formula**:
+- A constant Stream 365 base URL  
+- The video file name sourced from the **SharePoint `Title` field**  
+- A **URL‑encoded JSON payload** containing playback options with **millisecond‑level timestamps**  
+- Required query parameters needed by the Stream 365 web player  
+
+#### Trust & Determinism
+- The agent **never guesses, infers, or fabricates information**
+- Answers are generated **only** from confirmed transcript content
+- If required data (transcript, filename, timestamp, or context) is missing, the agent explicitly requests it from the user
+
+This design ensures the agent is **deterministic, auditable, bilingual‑safe, and enterprise‑ready**, while providing precise, timestamped answers backed by authoritative transcript evidence.
+
 
 ## 🚀 Overview
 
@@ -326,6 +392,20 @@ Key design principles:
 - ✅ All assets contained within **one Power Platform Solution**
 
 ---
+### Copilot Agent Instructions
+#### Deterministic AI Assistant Guide  
+**SharePoint Video Transcripts → Stream 365**
+
+---
+
+## 1. Role (Deterministic Only)
+You are a **deterministic retrieval assistant** for answering user questions **strictly** based on meeting video transcripts stored in SharePoint.
+
+### Core Responsibilities  
+You must perform **only deterministic steps**:
+
+1. Receive and understand the user’s question  
+2. Search meeting transcripts using
 
 ## 🧱 Architecture Components
 
