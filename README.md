@@ -365,8 +365,9 @@ A deterministic Copilot Studio agent for locating **Microsoft Stream (365) video
 This repository documents the **architecture, conventions, and setup steps** required to build an enterprise‑grade video discovery agent with auditable and reproducible behavior.
 
 ---
-### Copilot Agent Description (Copy)
 
+### Copilot Agent Description (Copy)
+```markdown
 This AI assistant specializes in answering user questions by searching and analyzing meeting video transcripts stored in SharePoint.  
 When a user submits a question, the agent uses the SharePoint connector to locate relevant video transcripts, identifies the most relevant segment that answers the query, and returns a **structured response with three mandatory parts**:
 
