@@ -35,15 +35,42 @@ All components **must be created inside a single Power Platform Solution**.
 
 ---
 
-### 2. Prepare and Upload Video Files (with Examples)
+#### CamelCase File Naming Examples
 
-This step ensures that video files are named, stored, and referenced consistently so they can be deterministically resolved by the agent and flows.
+All video and transcript files **must use the same CamelCase name**, written in English, with no spaces or special characters. This is critical for deterministic matching between SharePoint, Excel transcripts, and Power Automate flows.
 
-#### Required Conventions
-- File names **must be in English**
-- Use **CamelCase**
-- Avoid spaces, special characters, or dates in free text
-- The video file name must later **match the transcript file name exactly**
+##### ✅ Correct CamelCase Examples
+
+| Purpose | File Name |
+|------|----------|
+| Video file | `WaterConsumptionDashboard.mp4` |
+| Transcript file | `WaterConsumptionDashboard.xlsx` |
+| Video file | `LabSafetyTraining.mp4` |
+| Transcript file | `LabSafetyTraining.xlsx` |
+| Video file | `AIAutomationIntroduction.mp4` |
+| Transcript file | `AIAutomationIntroduction.xlsx` |
+
+---
+
+##### ❌ Incorrect Examples (Do Not Use)
+
+- `water consumption dashboard.mp4` ❌ (spaces, lowercase)
+- `Water_Consumption_Dashboard.mp4` ❌ (underscores)
+- `Water-Consumption-Dashboard.mp4` ❌ (hyphens)
+- `לוח-צריכת-מים.mp4` ❌ (non‑English)
+- `WaterConsumptionDashboard_v2.mp4` ❌ (versioning in filename)
+
+---
+
+##### ✅ CamelCase Rules Summary
+
+- Each word starts with a **capital letter**
+- No spaces, underscores, dashes, or symbols
+- No version numbers or dates
+- File extension preserved (`.mp4`, `.xlsx`)
+- **Video and transcript file names must match exactly**
+
+Following these conventions guarantees reliable SharePoint filtering, deterministic transcript resolution, and correct Stream 365 timestamped link generation.
 
 ---
 
