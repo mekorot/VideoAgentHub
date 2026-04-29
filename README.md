@@ -392,29 +392,55 @@ If no transcript answers the question:
 - Respond clearly in Hebrew- Do not generate a Stream 365 link
 Example:> לא נמצא קטע תמלול שעונה ישירות על השאלה שנשאלה.
 ```
+Here is a refined, professional, and technically precise version with clearer English, consistent terminology, and production‑grade wording—**content preserved, clarity improved**.
+
+***
+
 ## 7. Create Deterministic Flows for the Agent
 
-Create the Power Automate flows that implement **all deterministic execution** used by the agent (file title from sharepoint list, citation formatting, Stream URL generation).
+Create Power Automate flows that implement **all deterministic execution logic** used by the agent, including file title resolution from SharePoint lists, citation formatting, and Stream (365) URL generation.
 
-> **Rule:** All flows must be created **inside the same Power Platform Solution** (`VideoRetrivalSolution`) and exposed to Copilot Studio as **Tools**. If created outside copilot studio agent flows it can be imported into the agent by adding tool and selecting power automate flow name.
+> **Rule:**  
+> All flows **must be created within the same Power Platform Solution** (`VideoRetrivalSolution`) and exposed to Copilot Studio as **Tools**.  
+> If a flow is created outside the agent, it **must be imported** by adding it as a tool and selecting the Power Automate flow by name.
+
+***
 
 ### 7.1 Required Flows (Mandatory)
 
-1. **GetFileTitleFromSharepointList**
-   - **Purpose:** Resolve the *Titled* video file name from the SharePoint filename field (no guessing).
-   - **Inputs:** `fileName` (string)
-   - **Outputs:** `fileTitle` (string, e.g., `הדרכה בנושא אפליקציית דוגמים`)
+#### 1. `GetFileTitleFromSharepointList`
 
-2. **convertTextToQuotation**
-   - **Purpose:** Format a transcript snippet into a clean, consistent quotation block (optionally includes speaker/context).
-   - **Inputs:** `text` (string), `speaker` (optional string), `context` (optional string)
-   - **Outputs:** `formattedQuotation` (string)
+*   **Purpose:** Resolve the *official titled* video name from the SharePoint list field corresponding to the file (no guessing or inference).
+*   **Inputs:**
+    *   `fileName` (string)
+*   **Outputs:**
+    *   `fileTitle` (string, e.g., `הדרכה בנושא אפליקציית דוגמים`)
 
-4. **getDirectVideoLinkWithTimestamp**
-   - **Purpose:** Generate a Stream (365) link that jumps directly to a specific timestamp (milliseconds).
-   - **Inputs:** `fileName` (string), `timestamp` (number, **milliseconds**)
-   - **Outputs:** `streamUrl` (string)
-   - `timestamp` url param is a base64 encoded json with the folowing structure:
+***
+
+#### 2. `convertTextToQuotation`
+
+*   **Purpose:** Format a transcript snippet into a clean, consistent quotation block, optionally including speaker and contextual information.
+*   **Inputs:**
+    *   `text` (string)
+    *   `speaker` (optional string)
+    *   `context` (optional string)
+*   **Outputs:**
+    *   `formattedQuotation` (string)
+
+***
+
+#### 3. `getDirectVideoLinkWithTimestamp`
+
+*   **Purpose:** Generate a Stream (Microsoft 365) video link that opens **directly at a specific timestamp**.
+*   **Inputs:**
+    *   `fileName` (string)
+    *   `timestamp` (number, **milliseconds**)
+*   **Outputs:**
+    *   `streamUrl` (string)
+
+The `timestamp` URL parameter must be constructed as a **Base64‑encoded JSON string** with the following structure:
+
 ```json
 {
   "referralInfo": {
@@ -428,24 +454,47 @@ Create the Power Automate flows that implement **all deterministic execution** u
   }
 }
 ```
-- The Json format should be stringify and encoded into bas64.
-- The url components are: `domain` + `fileName.mp4` + `?nav=` + `encodedJsonBase64` + `&web=1`
-  
+
+Implementation notes:
+
+*   The JSON object **must be stringified** and then **Base64‑encoded**.
+*   The final URL must be constructed as:
+        domain + fileName.mp4 + ?nav= + encodedJsonBase64 + &web=1
+
+***
+
 ### 7.2 Flow Implementation Guidelines (Deterministic / Production‑Safe)
 
-- **Do not compute timestamps in the agent.** The agent passes the **exact** `timestamp` in milliseconds taken from the Excel transcript row.
-- **Validate inputs** in each flow (null/empty checks) and return a clear error message to the agent when invalid.
-- Use **Scopes** (`Try` / `Catch` / `Finally`) with consistent error outputs (e.g., `status`, `message`, `details`).
-- Centralize constants (e.g., Stream base URL) using **Environment Variables** inside the solution.
-- Ensure all outputs are **single, stable fields** (no nested objects unless required) to keep the agent contract deterministic.
+*   **Do not compute timestamps in the agent.**  
+    The agent must pass the **exact `timestamp` in milliseconds**, taken directly from the Excel transcript row.
+*   **Validate inputs** in every flow (null / empty / invalid values) and return a clear, structured error message to the agent.
+*   Use **Scopes** (`Try` / `Catch` / `Finally`) with consistent error outputs, for example:
+    *   `status`
+    *   `message`
+    *   `details`
+*   Centralize all constants (e.g., Stream base URL) using **Environment Variables** within the solution.
+*   Ensure all outputs are **single, stable scalar fields**. Avoid nested objects unless strictly required, to keep the agent–tool contract deterministic.
+*   If Power Automate is not preferred, external APIs may be used by exposing them to the agent as **Tools**.
+
+***
 
 ### 7.3 Testing Checklist
 
-- ✅ `fileName` returned from SharePoint matches the actual file in the **Videos** library.
-- ✅ `streamUrl` opens in Stream (365) and starts at the requested timestamp.
-- ✅ `formattedQuotation` renders consistently for English and Hebrew text (note the known Excel/encoding limitations described earlier).
-- ✅ All flows work under **least privilege** and respect SharePoint permissions.
+*   ✅ The `fileName` returned from SharePoint matches the actual file in the **Videos** library.
+*   ✅ The generated `streamUrl` opens in Stream (365) and starts at the requested timestamp.
+*   ✅ `formattedQuotation` renders consistently for both English and Hebrew text (taking into account known Excel and encoding limitations described earlier).
+*   ✅ All flows operate under the **principle of least privilege** and respect SharePoint permissions.
 
----
+***
 
-After completing these flows, proceed to wire them into the agent as mandatory Actions and enforce the **“no manual URL creation”** constraint in the system instructions.
+After completing these flows, wire them into the agent as **mandatory Actions** and enforce a strict **“no manual URL creation”** rule in the agent’s system instructions.
+
+***
+
+If you want, I can also:
+
+*   Normalize flow naming conventions
+*   Add OpenAPI‑style contracts for each tool
+*   Turn this section into a **DevOps review checklist**
+*   Refine it for **GitHub README**, **internal wiki**, or **architecture doc**
+
