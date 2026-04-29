@@ -73,9 +73,62 @@ This makes Copilot Studio the most natural and secure choice for building a prod
 > ⚠️ The agent does not generate or infer transcripts.  
 > It operates **only on transcripts produced by Teams Premium** and stored in SharePoint, ensuring consistency and traceability across the system.
 
-#### Example 1 – Meeting Recording
+### Downloadable Example Files (VTT → CSV → Excel)
 
-**Original file name (downloaded):**
+To illustrate the **complete transcript preparation pipeline**, this repository includes the **same transcript in three stages**, downloadable directly from the repo.  
+These examples should be used as the reference for both **format and structure**.
+
+#### 1. Original Transcript (VTT – Source Format)
+
+This file represents the **raw transcript** produced by **Microsoft Teams Premium**.
+
+- **VTT file (source transcript)**  
+  [prompt-engineering.vtt](https://github.com/mekorot/VideoAgentHub/blob/main/prompt-engineering.vtt)
+
+Used for:
+- Initial extraction
+- Timestamp grounding
+- Conversion to structured formats
+
+---
+
+#### 2. Intermediate Format (CSV)
+
+This file demonstrates the **intermediate conversion step** between VTT and Excel.
+
+- **CSV file (intermediate format)**  
+  [prompt-engineering.csv](https://github.com/mekorot/VideoAgentHub/blob/main/prompt-engineering.csv)
+
+Used for:
+- Cleaning
+- Normalization
+- Preparing data for Excel ingestion
+
+---
+
+#### 3. Final Transcript (Excel – Production Format)
+
+This is the **authoritative transcript format** consumed by the Copilot Studio agent.
+
+- **Excel transcript (final format)**  
+  [prompt-engineering.xlsx](https://github.com/mekorot/VideoAgentHub/blob/main/prompt-engineering.xlsx)
+
+Excel requirements:
+- Data saved as a **Table**
+- Mandatory columns:
+  - `StartTimeMs`
+  - `EndTimeMs`
+  - `Text`
+- File name must exactly match the video file name (CamelCase)
+
+---
+
+✅ These three files together demonstrate the **end‑to‑end transcript lifecycle** expected by the solution:  
+
+**Teams Premium → VTT → CSV → Excel (Table) → Copilot Studio Agent**
+
+No other formats are supported in production.
+
 
 ---
 
