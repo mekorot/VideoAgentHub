@@ -1,2 +1,275 @@
-# VideoAgentHub
-Deterministic reference implementation for a Copilot Studio agent that retrieves Microsoft Stream (365) video segments using Excel‑based transcripts in SharePoint. Combines GPT‑4.1 for understanding with Power Automate for precise, auditable timestamped video links.
+# Video Retrieval Agent (Copilot Studio)
+```markdown
+# 🎥 Video Retrieval Agent (Copilot Studio)
+
+A deterministic Copilot Studio agent for locating **Microsoft Stream (365) video segments** based on **Excel‑based transcripts**, using SharePoint, Power Automate, and GPT‑4.1.
+
+This repository documents the **architecture, conventions, and setup steps** required to build an enterprise‑grade video discovery agent with auditable and reproducible behavior.
+
+---
+
+## 🚀 Overview
+
+The agent enables users to:
+- Search video content via **structured transcripts**
+- Retrieve **precise Stream links with timestamps**
+- Receive **clear Markdown responses**, including Hebrew titles when applicable
+
+Key design principles:
+- ✅ Deterministic execution for URLs and timestamps  
+- ✅ Probabilistic reasoning only for semantic understanding  
+- ✅ All assets contained within **one Power Platform Solution**
+
+---
+
+## 🧱 Architecture Components
+
+- **Copilot Studio** – Conversational agent
+- **SharePoint Online** – Video & transcript storage
+- **Power Automate** – Deterministic logic (filtering, URL generation, formatting)
+- **Excel Online** – Transcript storage format (table‑based)
+- **GPT‑4.1** – Language model for understanding & enrichment
+
+---
+
+## 🗂️ SharePoint Structure
+
+### 1. Dedicated Site
+Create a SharePoint site with an **English URL** for clean paths.
+
+Example:
+```
+
+/sites/VideoKnowledgeHub
+
+```
+
+---
+
+### 2. Videos Library
+- Library name: `Videos`
+- Purpose: Store video files (MP4 / Stream)
+- Naming convention: **English CamelCase**
+
+Example:
+```
+
+WaterConsumptionDashboard.mp4
+
+```
+
+---
+
+### 3. Transcripts Library
+- Library name: `Transcripts`
+- Purpose: Store Excel transcripts
+- File name **must exactly match** the video file name
+
+Example:
+```
+
+WaterConsumptionDashboard.xlsx
+
+```
+
+---
+
+## 📝 Transcript Preparation Pipeline
+
+1. Download video file  
+2. Rename to **English CamelCase**  
+3. Upload to `Videos` library  
+4. Download transcript file (VTT)  
+5. Convert: `VTT → CSV → Excel`  
+6. In Excel:
+   - Convert data to a **Table**
+   - Required columns:
+     - `StartTimeMs`
+     - `EndTimeMs`
+     - `Text`
+7. Upload Excel file to `Transcripts` library  
+8. (Optional) Use a language model to generate a **Hebrew title** and store it as metadata
+
+> 🔁 This pipeline can be fully automated with **Power Automate** or external scripts.
+
+---
+
+## 🧩 Power Platform Solution
+
+Create a dedicated solution in the **Power Platform Development Environment**:
+
+```
+
+VideoRetrievalSolution
+
+```
+
+✅ **All components below must reside in this solution**:
+- Copilot Studio agent
+- Power Automate flows
+- Connections
+- Custom logic
+
+---
+
+## 🤖 Copilot Studio Agent
+
+### Agent Scope
+- Operates **only on transcript data**
+- Does **not infer or guess timestamps**
+- Delegates deterministic work to flows
+
+### System Instructions
+- Enforce transcript‑only answers
+- Require timestamp & URL generation via flows
+- Prohibit manual URL construction
+
+📎 See: `prompt-engineering.txt`
+
+---
+
+## 🧠 Recommended Model
+
+```
+
+GPT‑4.1
+
+````
+
+Why:
+- High precision with structured data
+- Strong multilingual performance (English + Hebrew)
+- Better determinism boundaries
+
+---
+
+## 🔁 Deterministic Power Automate Flows
+
+All flows are included in the same solution.
+
+### Flow 1 – Resolve Video Metadata
+- Filters SharePoint items by **CamelCase file name**
+- Returns:
+  - File name
+  - Item ID
+  - Hebrew display title (if available)
+
+---
+
+### Flow 2 – Generate Stream URL with Timestamp
+- Input: Video file + timestamp (milliseconds)
+- Logic:
+  - Convert milliseconds → seconds
+  - Build navigation object
+  - Base64‑encode navigation payload
+  - Append `nav` parameter to Stream URL
+
+📎 See: `generate-video-url.json`
+
+---
+
+### Flow 3 – Markdown Response Formatter
+Formats a consistent, readable response:
+
+```markdown
+### Short Answer (Hebrew)
+
+> Transcribed quote
+
+[Stream Video Link]
+````
+
+***
+
+## 🔄 End‑to‑End Flow
+
+1.  User submits a question
+2.  Agent searches Excel transcripts
+3.  Exact transcript row is selected
+4.  Timestamp (ms) extracted
+5.  Video metadata resolved
+6.  Stream URL generated
+7.  Markdown response returned
+
+***
+
+## ✅ Validation & Testing
+
+### Probabilistic Validation
+
+*   Open‑ended questions
+*   Validate semantic accuracy
+
+### Deterministic Validation
+
+*   Known timestamp questions
+*   Validate:
+    *   No hallucinations
+    *   Exact timestamp jump
+    *   Correct video resolution
+
+***
+
+## 🔐 Architectural Rules (Mandatory)
+
+✅ One solution only  
+✅ English + CamelCase naming  
+✅ Transcript‑based answers  
+✅ Deterministic URL generation
+
+❌ No inferred timestamps  
+❌ No manual Stream link creation
+
+***
+
+## 📎 Repository Appendix
+
+*   `prompt-engineering.txt` – Agent system instructions
+*   `generate-video-url.json` – Deterministic Stream URL flow
+*   Sample transcript files (CSV / Excel)
+*   Reference deterministic assistant guide
+
+***
+
+## 📌 Optional Extensions
+
+*   Mermaid / Visio architecture diagram
+*   CI‑validated transcript ingestion
+*   Automated VTT → Excel pipeline
+*   Executive summary version
+
+***
+
+Built for **enterprise‑grade Copilot Studio deployments** 🏗️  
+Deterministic where it matters. Probabilistic where it adds value.
+
+```
+```
+
+## Sample Files
+
+This repository includes sample files demonstrating the expected formats.
+
+### Transcript Samples
+- Excel transcript: ./samples/WaterConsumptionDashboardGuideAccessFilteringExport.xlsx
+- CSV transcript: ./samples/WaterConsumptionDashboardGuideAccessFilteringExport.csv
+
+### Agent & Flow Samples
+- Copilot Studio system prompt: ./samples/prompt-engineering.txt
+- Stream URL generation flow: ./samples/generate-video-url.json
+- Deterministic architecture guide: ./samples/Deterministic_AI_Assistant_Guide.md
+
+## Suggested Repository Structure
+
+```text
+.
+├─ README.md
+├─ samples/
+│  ├─ WaterConsumptionDashboardGuideAccessFilteringExport.xlsx
+│  ├─ WaterConsumptionDashboardGuideAccessFilteringExport.csv
+│  ├─ prompt-engineering.txt
+│  ├─ generate-video-url.json
+│  └─ Deterministic_AI_Assistant_Guide.md
+└─ solution/
+   └─ VideoRetrievalSolution/
+```
