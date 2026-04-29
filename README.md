@@ -1,4 +1,22 @@
 # Video Retrieval Agent (Copilot Studio)
+## Introduction
+
+This repository presents a **production‑grade reference implementation** for building a **Copilot Studio agent** that retrieves precise Microsoft Stream (365) video segments based on **Excel‑based transcripts stored in SharePoint**.
+
+The solution is intentionally designed around a strict separation of responsibilities:
+
+- **Probabilistic reasoning** (semantic understanding, multilingual interpretation, intent detection) is handled by a language model.
+- **Deterministic execution** (video resolution, timestamp calculation, Stream URL generation, and response formatting) is handled by Power Automate flows.
+
+All components are packaged within a **single Power Platform Solution** and follow consistent naming conventions, deterministic data contracts, and **transcript‑only answer policies**. This architecture ensures the system is **auditable, reproducible, and enterprise‑safe**, while still leveraging modern AI capabilities where they add real value.
+
+The repository includes:
+- Reference architecture and setup guidelines  
+- Sample transcript files (Excel and CSV)  
+- Deterministic Power Automate flow definitions  
+- Copilot Studio system instructions  
+
+This implementation is well‑suited for organizations that require **accurate video discovery**, strict governance, and predictable behavior when deploying Copilot Studio agents at scale.
 ```markdown
 # 🎥 Video Retrieval Agent (Copilot Studio)
 
