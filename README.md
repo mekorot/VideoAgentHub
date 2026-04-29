@@ -17,6 +17,62 @@ The repository includes:
 - Copilot Studio system instructions  
 
 This implementation is well‑suited for organizations that require **accurate video discovery**, strict governance, and predictable behavior when deploying Copilot Studio agents at scale.
+
+## Steps to Produce
+
+Follow these steps to implement and operationalize the Video Retrieval Agent end‑to‑end.  
+All components **must be created inside a single Power Platform Solution**.
+
+---
+
+### 1. Prepare SharePoint Structure
+
+1. Create a **dedicated SharePoint site** with an English URL.
+2. Create a document library named **`Videos`** for storing video files.
+3. Create a document library named **`Transcripts`** for storing transcript files (Excel).
+4. Enforce **English CamelCase naming** for all files.
+   - Video and transcript file names must be **identical**.
+
+---
+
+### 2. Prepare and Upload Video Files
+
+1. Download source video files locally.
+2. Rename each file to **English CamelCase**.
+3. Upload the files to the **Videos** library.
+4. (Optional) Store additional metadata such as recording date or owner.
+
+---
+
+### 3. Generate and Structure Transcripts
+
+1. Download the transcript file (usually `.vtt`).
+2. Convert the transcript:
+   - `VTT → CSV → Excel`
+3. In Excel:
+   - Convert the data into a **Table**
+   - Required columns:
+     - `StartTimeMs`
+     - `EndTimeMs`
+     - `Text`
+4. Save the Excel file using the **exact same CamelCase name** as the video.
+5. Upload the Excel file to the **Transcripts** library.
+
+---
+
+### 4. Enrich Transcript Metadata (Optional but Recommended)
+
+1. Use a language model to generate a **Hebrew title** based on the transcript.
+2. Store the Hebrew title:
+   - As SharePoint metadata, or
+   - In an associated SharePoint list
+
+---
+
+### 5. Create Power Platform Solution
+
+1. In the Power Platform development environment, create a solution:
+
 ```markdown
 # 🎥 Video Retrieval Agent (Copilot Studio)
 
