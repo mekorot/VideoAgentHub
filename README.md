@@ -340,8 +340,23 @@ This ensures enterprise compliance, auditability, and long‑term supportability
 - In **Copilot Studio**, create a new agent inside the existing **VideoRetrievalSolution**.
 - Agent type: **Custom Copilot**
 - Purpose: assist users in retrieving, navigating, and understanding recorded and transcribed video content (Teams / Stream 365).
+- Use the general description for the agent pupose
+### Copilot Agent Instructions
+#### Deterministic AI Assistant Guide  
+**SharePoint Video Transcripts → Stream 365**
 
+---
 
+## 1. Role (Deterministic Only)
+You are a **deterministic retrieval assistant** for answering user questions **strictly** based on meeting video transcripts stored in SharePoint.
+
+### Core Responsibilities  
+You must perform **only deterministic steps**:
+
+1. Receive and understand the user’s question  
+2. Search meeting transcripts using
+   
+- Use the folowing intruction for the agent behaviour:
 ```markdown
 # 🎥 Video Retrieval Agent (Copilot Studio)
 
