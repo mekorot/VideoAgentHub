@@ -47,6 +47,31 @@ All video and transcript files **must use the same CamelCase name**, written in 
 | Transcript file | `WaterConsumptionDashboard.xlsx` |
 
 ---
+## Platform Context and Rationale
+
+All videos referenced in this solution are **recorded and transcribed using Microsoft Teams Premium**. As a result, both the **video assets** and the **native transcripts** are already generated within the Microsoft 365 ecosystem and stored in SharePoint / Stream (on SharePoint).
+
+Because of this operating model:
+
+- Transcripts are **available by default**, consistently structured, and time‑aligned.
+- Videos are stored in **Microsoft Stream (365)**, backed by SharePoint document libraries.
+- Authentication, permissions, and compliance are already handled by Microsoft Entra ID.
+
+### Why Copilot Studio Is the Preferred Platform
+
+Given that the entire lifecycle (recording → transcription → storage) is managed by Microsoft 365, **Copilot Studio** is the preferred platform for building the retrieval agent because it:
+
+- Natively integrates with **Teams, SharePoint, and Stream (365)**
+- Allows tight coupling with **Power Automate** for deterministic execution
+- Supports **enterprise governance**, auditing, and solution packaging
+- Enables a clear separation between:
+  - **Probabilistic understanding** (language model)
+  - **Deterministic logic** (flows, filtering, URL generation)
+
+This makes Copilot Studio the most natural and secure choice for building a production‑grade video discovery agent in environments where **Teams Premium recordings and transcripts are the system of record**.
+
+> ⚠️ The agent does not generate or infer transcripts.  
+> It operates **only on transcripts produced by Teams Premium** and stored in SharePoint, ensuring consistency and traceability across the system.
 
 #### Example 1 – Meeting Recording
 
