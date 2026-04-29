@@ -12,7 +12,7 @@ All components are packaged within a **single Power Platform Solution** and foll
 
 The repository includes:
 - Reference architecture and setup guidelines  
-- Sample transcript files (Excel and CSV)  
+- Sample transcript files (Excel, CSV and VTT)  
 - Deterministic Power Automate flow definitions  
 - Copilot Studio system instructions  
 
@@ -183,6 +183,16 @@ Used for:
 
 This file demonstrates the **intermediate conversion step** between VTT and Excel.
 
+## Data Format Limitation – Hebrew Support
+
+> **Important Note**
+>
+> The current working format **does not support Hebrew text reliably**.
+>
+> Therefore, all Hebrew content **must be imported into Excel** after preprocessing.
+>
+> To ensure deterministic behavior and encoding safety, an intermediate CSV format is required.
+
 - **CSV file (intermediate format)**  
   [prompt-engineering.csv](https://github.com/mekorot/VideoAgentHub/blob/main/prompt-engineering.csv)
 
@@ -206,6 +216,7 @@ Excel requirements:
   - `StartTimeMs`
   - `EndTimeMs`
   - `Text`
+- Data table must have same name of file
 - File name must exactly match the video file name (CamelCase)
 
 ---
@@ -300,19 +311,22 @@ This extension is not mandatory for the initial implementation but is **strongly
 
 ---
 
-
 ## 5. Create Power Platform Solution
 
-- In the **Power Platform development environment**, create a single solution named:
-- All components **must be created and managed inside this single solution**:
+- In the **Power Platform development environment**, create a **single solution** named:  
+  **`VideoRetrivalSolution`**
+- **All components must be created and managed exclusively within this solution**, including:
   - Copilot Studio agent  
   - Power Automate flows  
   - Connections  
-  - Custom logic and configuration  
+  - Custom logic and configuration
+- Using a single solution ensures:
+  - Consistent dependency management  
+  - Easier deployment and versioning  
+  - Safe and predictable migration between environments (Dev / Test / Prod)
 
 ### Reference Solution
-Use this repository as the authoritative reference for solution structure, conventions, and sample assets:  
-**Solution URL:** https://github.com/mekorot/VideoAgentHub
+Use this repository as the authoritative reference for solution structure, conventions, and sample assets.
 
 ### ⚠️ Governance & DevOps Alignment (Mandatory)
 
