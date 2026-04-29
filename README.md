@@ -392,4 +392,49 @@ If no transcript answers the question:
 - Respond clearly in Hebrew- Do not generate a Stream 365 link
 Example:> לא נמצא קטע תמלול שעונה ישירות על השאלה שנשאלה.
 
-## 7. Create determinisitic flows for the agent
+## 7. Create Deterministic Flows for the Agent
+
+Create the Power Automate flows that implement **all deterministic execution** used by the agent (file resolution, citation formatting, Stream URL generation).
+
+> **Rule:** All flows must be created **inside the same Power Platform Solution** (`VideoRetrivalSolution`) and exposed to Copilot Studio as **Actions**.
+
+### 7.1 Required Flows (Mandatory)
+
+1. **GetFileTitleFromSharepointList**
+   - **Purpose:** Resolve the *canonical* video file name from the SharePoint item ID (no guessing).
+   - **Inputs:** `itemId` (number/string)
+   - **Outputs:** `fileName` (string, e.g., `WaterConsumptionDashboard.mp4`)
+
+2. **GetTitleFromFileName**
+   - **Purpose:** Convert a technical file name into a human‑readable title for display.
+   - **Inputs:** `fileName` (string)
+   - **Outputs:** `title` (string)
+
+3. **convertTextToQuotation**
+   - **Purpose:** Format a transcript snippet into a clean, consistent quotation block (optionally includes speaker/context).
+   - **Inputs:** `text` (string), `speaker` (optional string), `context` (optional string)
+   - **Outputs:** `formattedQuotation` (string)
+
+4. **getDirectVideoLinkWithTimestamp**
+   - **Purpose:** Generate a Stream (365) link that jumps directly to a specific timestamp (milliseconds).
+   - **Inputs:** `fileName` (string), `timestamp` (number, **milliseconds**)
+   - **Outputs:** `streamUrl` (string)
+
+### 7.2 Flow Implementation Guidelines (Deterministic / Production‑Safe)
+
+- **Do not compute timestamps in the agent.** The agent passes the **exact** `timestamp` in milliseconds taken from the Excel transcript row.
+- **Validate inputs** in each flow (null/empty checks) and return a clear error message to the agent when invalid.
+- Use **Scopes** (`Try` / `Catch` / `Finally`) with consistent error outputs (e.g., `status`, `message`, `details`).
+- Centralize constants (e.g., Stream base URL) using **Environment Variables** inside the solution.
+- Ensure all outputs are **single, stable fields** (no nested objects unless required) to keep the agent contract deterministic.
+
+### 7.3 Testing Checklist
+
+- ✅ `fileName` returned from SharePoint matches the actual file in the **Videos** library.
+- ✅ `streamUrl` opens in Stream (365) and starts at the requested timestamp.
+- ✅ `formattedQuotation` renders consistently for English and Hebrew text (note the known Excel/encoding limitations described earlier).
+- ✅ All flows work under **least privilege** and respect SharePoint permissions.
+
+---
+
+After completing these flows, proceed to wire them into the agent as mandatory Actions and enforce the **“no manual URL creation”** constraint in the system instructions.
